@@ -1,6 +1,7 @@
 package es.cice.androidstackexchange;
 
 
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -9,10 +10,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.io.IOException;
 import java.util.List;
 
 import es.cice.androidstackexchange.database.QuestionOpenHelper;
+import es.cice.androidstackexchange.events.NewDataEvent;
 import es.cice.androidstackexchange.model.Item;
 import es.cice.androidstackexchange.retrofitresources.QuestionCall;
 import retrofit2.Retrofit;
@@ -60,7 +64,9 @@ public class ModelFragment extends Fragment {
                 List<Item> questionList=service.getQuestionsCall().execute().body();
                 //los guardo en BD
                 QuestionOpenHelper qoh= QuestionOpenHelper.getInstance(getActivity());
-                qoh.insert(List<Item>);
+                Cursor c=qoh.insert(questionList);
+                //notificar cursos mediante un evento
+                EventBus.getDefault().postSticky(new NewDataEvent(c));
             } catch (IOException e) {
                 e.printStackTrace();
             }

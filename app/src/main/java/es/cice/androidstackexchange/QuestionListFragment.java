@@ -1,6 +1,7 @@
 package es.cice.androidstackexchange;
 
 
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
@@ -51,6 +52,9 @@ public class QuestionListFragment extends ListFragment {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void getDataNotificationEven(NewDataEvent event){
         Log.d(TAG, "getDataNotificationEvent().....");
+        Cursor cursor =event.getC();
+        ((CursorAdapter) getListView().getAdapter()).swapCursor(cursor);
+        ((CursorAdapter) getListView().getAdapter()).notifyDataSetChanged();
 
     }
 
