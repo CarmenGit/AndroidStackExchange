@@ -57,6 +57,7 @@ public class QuestionOpenHelper extends SQLiteOpenHelper{
         //marcar la transacción como exitosa
         db.setTransactionSuccessful();
         db.endTransaction();
+        //se construye el cursor, tres columnas
         return db.query(QUESTION_TABLE,new String[] {"_id",QUESTION_TITLE_COLUM, OWNER_AVATAR_COLUM}, null, null, null, null, null);
     }
 

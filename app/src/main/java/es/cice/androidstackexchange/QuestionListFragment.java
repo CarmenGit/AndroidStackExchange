@@ -42,9 +42,12 @@ public class QuestionListFragment extends ListFragment {
         //creamos adaptador
         //penúltimo parámetro los nombres de las columnas q vamos a usar
         //último los id de los widgets
+        //al crear al adaptador estamos diciéndole qué columna corresponde a cada widget
         SimpleCursorAdapter adapter=new SimpleCursorAdapter(getActivity(),R.layout.question_row,
                 null, new String[]{QuestionOpenHelper.OWNER_AVATAR_COLUM,QuestionOpenHelper.QUESTION_TITLE_COLUM}, new int[]{R.id.avatarIV, R.id.questionTV}, 0);
         //ViewBinder es un compnente que define cada uno de widget que debe tratar el adapter
+        //cada vez que tiene q formar una fila el adaptador, llama al setviewBinder
+        //lo llama dos veces uno por cada widget de la fila (hay dos widget un imageView y un TextView
         adapter.setViewBinder(new QuestionViewBinder());
         setListAdapter(adapter);
 
@@ -56,6 +59,7 @@ public class QuestionListFragment extends ListFragment {
     //por donde quiero recibir la notificación
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void getDataNotificationEven(NewDataEvent event){
+        //El cursor siempre está posicionado, al ppio a la posición anterior a la primera
         Log.d(TAG, "getDataNotificationEvent().....");
         Cursor cursor =event.getC();
         ((CursorAdapter) getListView().getAdapter()).swapCursor(cursor);
@@ -97,7 +101,7 @@ public class QuestionListFragment extends ListFragment {
                             .with(getActivity())
                             .load(cursor.getString(columnIndex))
                             //pedimos q redimensione la imagen pq no sabemos su tamaño
-                            .resize(54,54)
+                            .resize(100,100)
                             .centerCrop()
                     .into((ImageView)view);
                     return true;

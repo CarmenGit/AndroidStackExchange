@@ -27,6 +27,9 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 //Fragmento encargado de obtener los datos
     //En un hilo de java
+    //QuestionCall es el servicio que obtienen datos de tipo qeestiongroup
+    //QuestionGroup esta modelado para tener los datos que necesito
+    //
 public class ModelFragment extends Fragment {
 
 
@@ -57,12 +60,14 @@ public class ModelFragment extends Fragment {
                     baseUrl("https://api.stackexchange.com")
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
+            //
             QuestionCall service=retrofit.create(QuestionCall.class);
             try {
                 //recuperamos ls items
-                QuestionGroup qg=service.getQuestionsCall().execute().body();
+                QuestionGroup qg=service.getQuestionsCall("android").execute().body();
                 //los guardo en BD
                 QuestionOpenHelper qoh= QuestionOpenHelper.getInstance(getActivity());
+                //inertamos los datos en la bd
                 Cursor c=qoh.insert(qg.items);
                 //notificar cursos mediante un evento
                 EventBus.getDefault().postSticky(new NewDataEvent(c));

@@ -11,7 +11,7 @@ public class Item {
     @SerializedName("question_id") public int questionId;
     public String link;
     public String title;
-
+//este atributo es un objeto en el json, está modelado aquí como un objeto de tipo Owner
     public Owner owner;
 
 }

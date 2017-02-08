@@ -7,6 +7,7 @@ import java.util.List;
  */
 
 public class QuestionGroup {
-    //la interfaz  va a devolver
+    //debe coincidir el campo con el del Json
+    //sino hay que colocar un serializable
     public List<Item> items;
 }
