@@ -10,7 +10,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CursorAdapter;
+import android.widget.ImageView;
 import android.widget.SimpleCursorAdapter;
+import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -38,9 +42,10 @@ public class QuestionListFragment extends ListFragment {
         //creamos adaptador
         //penúltimo parámetro los nombres de las columnas q vamos a usar
         //último los id de los widgets
-        CursorAdapter adapter=new SimpleCursorAdapter(getActivity(),R.layout.question_row,
+        SimpleCursorAdapter adapter=new SimpleCursorAdapter(getActivity(),R.layout.question_row,
                 null, new String[]{QuestionOpenHelper.OWNER_AVATAR_COLUM,QuestionOpenHelper.QUESTION_TITLE_COLUM}, new int[]{R.id.avatarIV, R.id.questionTV}, 0);
-
+        //ViewBinder es un compnente que define cada uno de widget que debe tratar el adapter
+        adapter.setViewBinder(new QuestionViewBinder());
         setListAdapter(adapter);
 
         return super.onCreateView(inflater, container, savedInstanceState);
@@ -76,4 +81,32 @@ public class QuestionListFragment extends ListFragment {
 
     }
 
+    private class QuestionViewBinder implements SimpleCursorAdapter.ViewBinder {
+        @Override
+
+        //este método es llamado cada vez que el adaptador debe construir una fila
+        //columnIndex es la posición, la fila
+        //a este se le llama dos veces uno para el imagen y otro para el textview, la pregunta
+        //usamos Picasso q se encarga de cargar en el widget un imagen
+        public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
+            //distinguimos si el view es la imagenview o el textview, pa usar Picasso o no
+            switch (view.getId()){
+                case R.id.avatarIV:
+                    //with es un método estático, con load le pido iniciar la descarga de la imagen
+                    Picasso
+                            .with(getActivity())
+                            .load(cursor.getString(columnIndex))
+                            //pedimos q redimensione la imagen pq no sabemos su tamaño
+                            .resize(54,54)
+                            .centerCrop()
+                    .into((ImageView)view);
+                    return true;
+
+                case R.id.questionTV:
+                    ((TextView) view).setText(cursor.getString(cursor.getColumnIndex(QuestionOpenHelper.QUESTION_TITLE_COLUM)));
+                    return true;
+            }
+            return false;
+        }
+    }
 }

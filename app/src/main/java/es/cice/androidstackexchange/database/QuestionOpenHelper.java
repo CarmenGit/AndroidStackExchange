@@ -21,6 +21,7 @@ public class QuestionOpenHelper extends SQLiteOpenHelper{
     public static final String OWNER_ID_COLUM="USER_ID";
     public static final String QUESTION_TABLE= "QUESTIONS";
 
+
     public static final String QUESTIO_DB="questionsDB";
     public static final int VERSION=1;
     private static QuestionOpenHelper qoh;
@@ -56,7 +57,7 @@ public class QuestionOpenHelper extends SQLiteOpenHelper{
         //marcar la transacción como exitosa
         db.setTransactionSuccessful();
         db.endTransaction();
-        return db.query(QUESTION_TABLE,new String[] {QUESTION_TITLE_COLUM, OWNER_AVATAR_COLUM}, null, null, null, null, null);
+        return db.query(QUESTION_TABLE,new String[] {"_id",QUESTION_TITLE_COLUM, OWNER_AVATAR_COLUM}, null, null, null, null, null);
     }
 
     @Override
